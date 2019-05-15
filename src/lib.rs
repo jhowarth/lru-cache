@@ -327,7 +327,9 @@ impl<K: Eq + Hash, V, S: BuildHasher, E: EvictHandler<K, V>> LruCache<K, V, E, S
     }
 }
 
-impl<K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher> Extend<(K, V)> for LruCache<K, V, E, S> {
+impl<K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher> Extend<(K, V)>
+    for LruCache<K, V, E, S>
+{
     fn extend<I: IntoIterator<Item = (K, V)>>(&mut self, iter: I) {
         for (k, v) in iter {
             self.insert(k, v);
@@ -335,7 +337,9 @@ impl<K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher> Extend<(K, V)> for 
     }
 }
 
-impl<K: fmt::Debug + Eq + Hash, V: fmt::Debug, E: EvictHandler<K, V>, S: BuildHasher> fmt::Debug for LruCache<K, V, E, S> {
+impl<K: fmt::Debug + Eq + Hash, V: fmt::Debug, E: EvictHandler<K, V>, S: BuildHasher> fmt::Debug
+    for LruCache<K, V, E, S>
+{
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.debug_map().entries(self.iter().rev()).finish()
     }
@@ -350,7 +354,9 @@ impl<K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher> IntoIterator for Lr
     }
 }
 
-impl<'a, K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher> IntoIterator for &'a LruCache<K, V, E, S> {
+impl<'a, K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher> IntoIterator
+    for &'a LruCache<K, V, E, S>
+{
     type Item = (&'a K, &'a V);
     type IntoIter = Iter<'a, K, V>;
     fn into_iter(self) -> Iter<'a, K, V> {
@@ -358,7 +364,9 @@ impl<'a, K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher> IntoIterator fo
     }
 }
 
-impl<'a, K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher> IntoIterator for &'a mut LruCache<K, V, E, S> {
+impl<'a, K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher> IntoIterator
+    for &'a mut LruCache<K, V, E, S>
+{
     type Item = (&'a K, &'a mut V);
     type IntoIter = IterMut<'a, K, V>;
     fn into_iter(self) -> IterMut<'a, K, V> {
