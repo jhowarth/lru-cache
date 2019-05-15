@@ -43,7 +43,6 @@ use std::borrow::Borrow;
 use std::collections::hash_map::RandomState;
 use std::fmt;
 use std::hash::{BuildHasher, Hash};
-use std::marker::PhantomData;
 
 use linked_hash_map::LinkedHashMap;
 
@@ -61,7 +60,7 @@ pub trait EvictHandler<K, V> {
 pub struct LruCache<K: Eq + Hash, V, E: EvictHandler<K, V>, S: BuildHasher = RandomState> {
     map: LinkedHashMap<K, V, S>,
     max_size: usize,
-    _e: PhantomData<E>,
+    evict_handler: E,
 }
 
 impl<K: Eq + Hash, V, E: EvictHandler<K, V>> LruCache<K, V, E> {
@@ -73,22 +72,22 @@ impl<K: Eq + Hash, V, E: EvictHandler<K, V>> LruCache<K, V, E> {
     /// use lru_cache::LruCache;
     /// let mut cache: LruCache<i32, &str> = LruCache::new(10);
     /// ```
-    pub fn new(capacity: usize) -> Self {
+    pub fn new(capacity: usize, evict_handler: E) -> Self {
         LruCache {
             map: LinkedHashMap::new(),
             max_size: capacity,
-            _e: PhantomData,
+            evict_handler,
         }
     }
 }
 
 impl<K: Eq + Hash, V, S: BuildHasher, E: EvictHandler<K, V>> LruCache<K, V, E, S> {
     /// Creates an empty cache that can hold at most `capacity` items with the given hash builder.
-    pub fn with_hasher(capacity: usize, hash_builder: S) -> Self {
+    pub fn with_hasher(capacity: usize, hash_builder: S, evict_handler: E) -> Self {
         LruCache {
             map: LinkedHashMap::with_hasher(hash_builder),
             max_size: capacity,
-            _e: PhantomData,
+            evict_handler,
         }
     }
 
