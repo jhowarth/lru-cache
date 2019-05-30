@@ -52,7 +52,7 @@ mod heapsize;
 // FIXME(conventions): implement indexing?
 
 pub trait EvictHandler<K, V> {
-    fn handle_evict(&self, key: &K, value: &V);
+    fn handle_evict(&self, key: &mut K, value: &mut V);
 }
 
 /// An LRU cache.
@@ -254,8 +254,8 @@ impl<K: Eq + Hash, V, S: BuildHasher, E: EvictHandler<K, V>> LruCache<K, V, E, S
     #[inline]
     pub fn remove_lru(&mut self) -> Option<(K, V)> {
         match self.map.pop_front() {
-            Some((key, value)) => {
-                self.evict_handler.handle_evict(&key, &value);
+            Some((mut key, mut value)) => {
+                self.evict_handler.handle_evict(&mut key, &mut value);
                 Some((key, value))
             }
             None => {
