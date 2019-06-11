@@ -74,7 +74,7 @@ impl<K: Eq + Hash, V, E: EvictHandler<K, V>> LruCache<K, V, E> {
     /// ```
     pub fn new(capacity: usize, evict_handler: E) -> Self {
         LruCache {
-            map: LinkedHashMap::new(),
+            map: LinkedHashMap::with_capacity(capacity),
             max_size: capacity,
             evict_handler,
         }
